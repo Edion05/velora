@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For Shatrah | 2026</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@300;500&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            height: 100vh; display: flex; justify-content: center; align-items: center;
+            font-family: 'Quicksand', sans-serif; overflow: hidden; background: #000;
+            cursor: default; /* Changed so you can see your mouse on PC */
+        }
+        
+        .v-banner {
+            position: fixed; top: -100px; left: 0; width: 100%; height: 65px;
+            background: linear-gradient(to right, #800e13, #ad2831, #800e13);
+            color: #fff; display: flex; justify-content: center; align-items: center;
+            font-family: 'Great Vibes', cursive; font-size: 1.8rem;
+            z-index: 2000; border-bottom: 2px solid #ff4d6d;
+        }
+
+        .bg-image {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(to bottom, rgba(15, 0, 3, 0.8), rgba(15, 0, 3, 0.95)), 
+                        url('https://images.unsplash.com/photo-1518199266791-739d6ff2c1e8?q=80&w=2070&auto=format&fit=crop');
+            background-size: cover; background-position: center; z-index: -1;
+        }
+        
+        .card {
+            background: rgba(30, 0, 5, 0.92);
+            padding: 30px; border-radius: 25px; border: 1px solid rgba(255, 77, 109, 0.3);
+            max-width: 450px; width: 90%; text-align: center; z-index: 10;
+            display: none; opacity: 0; box-shadow: 0 0 50px rgba(255, 77, 109, 0.2);
+        }
+
+        h1 { font-family: 'Great Vibes', cursive; font-size: 2.8rem; color: #ffb3c1; margin-bottom: 10px; }
+        #mainText { font-size: 1.1rem; line-height: 1.6; color: #ffe5ec; margin-bottom: 20px; min-height: 80px; }
+        
+        button {
+            padding: 12px 25px; border: 1px solid #ff4d6d; background: rgba(255, 77, 109, 0.15);
+            color: #ffb3c1; border-radius: 50px; font-size: 0.8rem; letter-spacing: 2px;
+            cursor: pointer; text-transform: uppercase; transition: 0.3s;
+        }
+        button:hover { background: #ff4d6d; color: #fff; }
+
+        #startOverlay { 
+            position: fixed; width: 100%; height: 100%; background: #000; 
+            z-index: 1000; display: flex; flex-direction: column; justify-content: center; align-items: center; 
+        }
+
+        .signature { font-family: 'Great Vibes', cursive; font-size: 2.5rem; color: #ffb3c1; margin-top: 15px; }
+        .petal { position: fixed; pointer-events: none; z-index: 100; font-size: 24px; }
+    </style>
+</head>
+<body onclick="spawnPetals(event)">
+
+<div class="v-banner" id="banner">Happy Valentine's Day 2026</div>
+<div class="bg-image"></div>
+
+<div id="startOverlay">
+    <h1 style="font-size: 3.5rem; margin-bottom: 20px;">For Shatrah</h1>
+    <button onclick="startJourney()">Read Message ❤️</button>
+</div>
+
+<div class="card" id="mainCard">
+    <h1>Edmond & Shatrah</h1>
+    <div id="mainText">Shatrah, some things are better felt than said...</div>
+    <button id="revealBtn" onclick="revealLove()">Read My Heart 💌</button>
+    <div class="signature" id="sig" style="display:none;">Edmond</div>
+</div>
+
+<audio id="staySong" loop>
+    <source src="Stay.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+    const music = document.getElementById('staySong');
+
+    function startJourney() {
+        music.play().catch(e => console.log("Audio play blocked until click"));
+        
+        gsap.to("#startOverlay", { opacity: 0, duration: 1, onComplete: () => {
+            document.getElementById('startOverlay').style.display = 'none';
+            const card = document.getElementById('mainCard');
+            card.style.display = 'block';
+            gsap.to(card, { opacity: 1, duration: 1 });
+            gsap.to("#banner", { top: 0, duration: 1 });
+        }});
+    }
+
+    function revealLove() {
+        document.getElementById('revealBtn').style.display = 'none';
+        const msg = "You are the beat in my heart and the peace in my soul. Thank you for being my home, my laughter, and my greatest adventure. I love you more than words could ever hold.";
+        const textEl = document.getElementById('mainText');
+        
+        textEl.innerHTML = "";
+        let i = 0;
+        function type() {
+            if(i < msg.length) {
+                textEl.innerHTML += msg.charAt(i);
+                i++;
+                setTimeout(type, 45);
+            } else {
+                const sig = document.getElementById('sig');
+                sig.style.display = 'block';
+                gsap.fromTo(sig, {opacity: 0}, {opacity: 1, duration: 1.5});
+            }
+        }
+        type();
+    }
+
+    function spawnPetals(e) {
+        const x = e.clientX || (e.touches ? e.touches[0].clientX : window.innerWidth/2);
+        const y = e.clientY || (e.touches ? e.touches[0].clientY : window.innerHeight/2);
+        for(let i=0; i<5; i++) {
+            const p = document.createElement("div");
+            p.className = "petal";
+            p.innerHTML = "🌹";
+            p.style.left = x + "px";
+            p.style.top = y + "px";
+            document.body.appendChild(p);
+            gsap.to(p, { 
+                x: x + (Math.random() - 0.5) * 200, 
+                y: y + (Math.random() - 0.5) * 200, 
+                opacity: 0, rotation: 360, duration: 1.5, onComplete: () => p.remove() 
+            });
+  
